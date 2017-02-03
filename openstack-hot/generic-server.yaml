@@ -15,9 +15,6 @@ parameters:
 
             TODO we should move to using tags once OpenStack Ocata which is
             available to us with support for server tags properties.
-    ssh_key:
-        type: string
-        description: SSH Key name to use (Public key must exist in OpenStack)
     index:
         type: number
     vm_flavor:
@@ -34,21 +31,6 @@ resources:
         properties:
             flavor: { get_param: vm_flavor }
             image: { get_param: vm_image }
-            name:
-                str_replace:
-                    template: SILO-JOB_NAME-VM_TYPE-INDEX
-                    params:
-                        "SILO": { get_param: silo }
-                        "JOB_NAME": { get_param: job_name }
-                        "VM_TYPE":
-                            str_split:
-                                - ' - '
-                                - { get_param: vm_image }
-                                - 1
-                        "INDEX": { get_param: index }
-            networks:
-                - network: RC-ODL
-            key_name: { get_param: ssh_key }
             user_data: |
                 #!/bin/bash
                 git clone https://git.opendaylight.org/gerrit/releng/builder /builder
